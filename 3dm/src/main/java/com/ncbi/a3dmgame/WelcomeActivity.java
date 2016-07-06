@@ -8,22 +8,39 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.Button;
 import android.widget.Toast;
 
-import com.felipecsl.gifimageview.library.GifImageView;
 import com.ncbi.a3dmgame.service.DownLoadService;
 import com.ncbi.a3dmgame.utils.NetUtils;
+
+import pl.droidsonroids.gif.GifImageView;
 
 public class WelcomeActivity extends AppCompatActivity {
     private Animation animation;
     private GifImageView gifImageView;
+    private Button close_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        initView();
+
+    }
+
+    private void initView() {
+        close_btn = (Button) findViewById(R.id.close_welcome_btn);
+        close_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isFirstOpen();
+                finish();
+            }
+        });
         //获取欢迎界面的GifImageView控件；
         gifImageView = (GifImageView) findViewById(R.id.welcome_gif);
 

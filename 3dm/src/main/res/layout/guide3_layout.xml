@@ -2,11 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="1">
+    android:background="#06adf5">
 
     <TextView
-        android:id="@+id/guide_pager3_tv"
+        android:id="@+id/guide3_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -14,11 +13,11 @@
         android:textSize="30sp" />
 
     <Button
-        android:id="@+id/guide_to_main_btn"
-        android:layout_width="match_parent"
+        android:id="@+id/guide_to_mainactivity_btn"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/guide_pager3_tv"
-        android:layout_marginTop="50dp"
-        android:text="进入" />
-
+        android:layout_below="@id/guide3_tv"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:text="点击进入或者继续滑动" />
 </RelativeLayout>

@@ -7,18 +7,40 @@
     android:orientation="vertical"
     tools:context="com.ncbi.a3dmgame.GuideActivity">
 
-    <com.felipecsl.gifimageview.library.GifImageView
-        android:id="@+id/welcome_gif"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager_guide"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="5" />
+        android:layout_height="match_parent"></android.support.v4.view.ViewPager>
 
-    <TextView
+
+    <LinearLayout
+        android:id="@+id/guide_dot_ll"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:text="欢迎使用3DM客户端"
-        android:textSize="20sp" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingBottom="40dp">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:padding="20dp"
+            android:src="@drawable/dot_dark" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:padding="20dp"
+            android:src="@drawable/dot_white" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:padding="20dp"
+            android:src="@drawable/dot_white" />
+    </LinearLayout>
 </LinearLayout>

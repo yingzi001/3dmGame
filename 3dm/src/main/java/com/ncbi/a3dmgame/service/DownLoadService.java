@@ -1,24 +1,111 @@
 package com.ncbi.a3dmgame.service;
 
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Environment;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
+import android.support.v7.app.NotificationCompat;
+import android.util.Log;
+import android.widget.Toast;
 
-import com.ncbi.a3dmgame.utils.MyLog;
+import com.ncbi.a3dmgame.R;
+import com.ncbi.a3dmgame.utils.FileUtils;
+import com.ncbi.a3dmgame.utils.HttpUtils;
+import com.ncbi.a3dmgame.utils.JsonUtils;
+import com.ncbi.a3dmgame.utils.MyDataBassHelper;
+
+import java.io.UnsupportedEncodingException;
+
 
 public class DownLoadService extends Service {
+    public static boolean jsonLoadFinash = false;
+    private String jsonUrl;
+    private NotificationManager manager;
+    private NotificationCompat.Builder builder;
+    private MyHandler handler;
+
     public DownLoadService() {
     }
 
+    MyDataBassHelper helper;
+
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        MyLog.i("aaa", "Service启动了");
-        return super.onStartCommand(intent, flags, startId);
+    public void onCreate() {
+        super.onCreate();
+        helper = new MyDataBassHelper(getApplicationContext());
+        handler = new MyHandler();
+        manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        builder = new NotificationCompat.Builder(getApplicationContext());
+        builder.setTicker("你有一条新信息")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("下载完成");
+    }
+
+    @Override
+    public int onStartCommand(final Intent intent, int flags, int startId) {
+
+        final SQLiteDatabase db = helper.getReadableDatabase();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String url = intent.getStringExtra("jsonurl");
+                byte[] jsonByte = HttpUtils.requestToByteArray(url);
+                if (jsonByte != null) {
+                    String json = null;
+                    try {
+                        json = new String(jsonByte, "utf-8");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    //进行json解析；
+                    JsonUtils.jsonToList(json, getApplicationContext());
+                    int i = 0;
+                    //读取数据库的图片列
+                    Cursor cursor = db.query("news", new String[]{"id", "litpic"}, null, null, null, null, null);
+                    while (cursor.moveToNext()) {
+                        String id = cursor.getString(0);
+                        String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+                        String imgName = path + "/download/" + "img" + i + ".jpg";
+                        String imgUrl = "http://www.3dmgame.com" + cursor.getString(1);
+                        byte[] imgByte = HttpUtils.requestToByteArray(imgUrl);
+                        FileUtils.SaveFileToSD("download", "img" + i + ".jpg", imgByte);
+                        ContentValues contentValues = new ContentValues();
+                        contentValues.put("litpic", "img" + i + ".jpg");
+                        Log.i("aaa", "imgname" + imgName);
+                        db.execSQL("update news set litpic=? where id=?", new String[]{imgName, id});
+                        i++;
+                    }
+
+                } else {
+                    Log.i("aaa", "json解析失败");
+                }
+                handler.sendEmptyMessage(1);
+            }
+        }).start();
+        return START_REDELIVER_INTENT;
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
     }
+
+    class MyHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            builder.setContentText("数据已经下载完成");
+            manager.notify(1, builder.build());
+            stopSelf();
+            Toast.makeText(getApplicationContext(), "下载完成，请点击查看", Toast.LENGTH_LONG).show();
+        }
+    }
+
 }

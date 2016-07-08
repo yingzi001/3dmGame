@@ -3,9 +3,7 @@ package com.ncbi.a3dmgame;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Matrix;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,6 +22,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private GifImageView gifImageView;
     private Button close_btn;
     private NetUtils netUtils = new NetUtils(WelcomeActivity.this);
+    private String jsonUrl = "http://www.3dmgame.com/sitemap/api.php?row=10&typeid=1&paging=1&page=1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,13 +55,13 @@ public class WelcomeActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationStart(Animation animation) {
+                Intent intent = new Intent(WelcomeActivity.this, DownLoadService.class);
+                intent.putExtra("jsonurl", jsonUrl);
                 if (netUtils.netOk()) {
                     if (netUtils.getNetType() == ConnectivityManager.TYPE_MOBILE) {
-                        Intent intent = new Intent(WelcomeActivity.this, DownLoadService.class);
                         startService(intent);
                         Toast.makeText(WelcomeActivity.this, "你正在使用手机流量", Toast.LENGTH_LONG).show();
                     } else {
-                        Intent intent = new Intent(WelcomeActivity.this, DownLoadService.class);
                         startService(intent);
                     }
                 }

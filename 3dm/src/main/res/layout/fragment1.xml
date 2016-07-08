@@ -2,20 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="1">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/artival_top_viewpager"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:background="#000">
+        android:layout_height="150dp"></android.support.v4.view.ViewPager>
 
-    </android.support.v4.view.ViewPager>
+    <!--<TextView-->
+    <!--android:id="@+id/main_artival_tv"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:text="PullToRefresh" />-->
 
-    <TextView
-        android:id="@+id/main_artival_tv"
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/pullto_lv_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="PullToRefresh" />
-
+        android:layout_height="match_parent"></com.handmark.pulltorefresh.library.PullToRefreshListView>
 </LinearLayout>

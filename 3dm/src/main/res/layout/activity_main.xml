@@ -24,11 +24,13 @@
             android:orientation="horizontal">
 
             <RadioButton
+                android:id="@+id/btn1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:button="@null"
                 android:padding="12dp"
                 android:text="文章首页"
+                android:textColor="@drawable/main_top_title_textcolor"
                 android:textSize="18sp" />
 
             <RadioButton
@@ -37,6 +39,7 @@
                 android:button="@null"
                 android:padding="12dp"
                 android:text="热点新闻"
+                android:textColor="@drawable/main_top_title_textcolor"
                 android:textSize="18sp" />
 
             <RadioButton
@@ -45,6 +48,7 @@
                 android:button="@null"
                 android:padding="12dp"
                 android:text="游戏杂谈"
+                android:textColor="@drawable/main_top_title_textcolor"
                 android:textSize="18sp" />
 
             <RadioButton
@@ -53,6 +57,7 @@
                 android:button="@null"
                 android:padding="12dp"
                 android:text="硬件信息"
+                android:textColor="@drawable/main_top_title_textcolor"
                 android:textSize="18sp" />
 
             <RadioButton
@@ -61,6 +66,7 @@
                 android:button="@null"
                 android:padding="12dp"
                 android:text="游戏前瞻"
+                android:textColor="@drawable/main_top_title_textcolor"
                 android:textSize="18sp" />
 
             <RadioButton
@@ -69,6 +75,7 @@
                 android:button="@null"
                 android:padding="12dp"
                 android:text="游戏评测"
+                android:textColor="@drawable/main_top_title_textcolor"
                 android:textSize="18sp" />
 
             <RadioButton
@@ -77,6 +84,7 @@
                 android:button="@null"
                 android:padding="12dp"
                 android:text="原创精品"
+                android:textColor="@drawable/main_top_title_textcolor"
                 android:textSize="18sp" />
 
             <RadioButton
@@ -85,6 +93,7 @@
                 android:button="@null"
                 android:padding="12dp"
                 android:text="游戏盘点"
+                android:textColor="@drawable/main_top_title_textcolor"
                 android:textSize="18sp" />
 
             <RadioButton
@@ -93,6 +102,7 @@
                 android:button="@null"
                 android:padding="12dp"
                 android:text="时事焦点"
+                android:textColor="@drawable/main_top_title_textcolor"
                 android:textSize="18sp" />
 
             <RadioButton
@@ -101,6 +111,7 @@
                 android:button="@null"
                 android:padding="12dp"
                 android:text="攻略中心"
+                android:textColor="@drawable/main_top_title_textcolor"
                 android:textSize="18sp" />
         </RadioGroup>
     </HorizontalScrollView>
@@ -153,8 +164,10 @@
             android:textSize="18sp" />
     </RadioGroup>
 
-    <android.support.v4.view.ViewPager
+    <com.ncbi.a3dmgame.fragment.MainFragmentViewPager
         android:id="@+id/main_viewpager_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></android.support.v4.view.ViewPager>
+        android:layout_height="match_parent"
+        android:layout_above="@id/main_bottom_area_rg"
+        android:layout_below="@+id/main_top_newstype_hsv"></com.ncbi.a3dmgame.fragment.MainFragmentViewPager>
 </RelativeLayout>

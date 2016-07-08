@@ -23,11 +23,13 @@ public class WelcomeActivity extends AppCompatActivity {
     private Animation animation;
     private GifImageView gifImageView;
     private Button close_btn;
+    private NetUtils netUtils = new NetUtils(WelcomeActivity.this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+
         initView();
 
     }
@@ -50,12 +52,14 @@ public class WelcomeActivity extends AppCompatActivity {
         gifImageView.startAnimation(animation);
 
         animation.setAnimationListener(new Animation.AnimationListener() {
-            NetUtils netUtils = new NetUtils(WelcomeActivity.this);
+
 
             @Override
             public void onAnimationStart(Animation animation) {
                 if (netUtils.netOk()) {
                     if (netUtils.getNetType() == ConnectivityManager.TYPE_MOBILE) {
+                        Intent intent = new Intent(WelcomeActivity.this, DownLoadService.class);
+                        startService(intent);
                         Toast.makeText(WelcomeActivity.this, "你正在使用手机流量", Toast.LENGTH_LONG).show();
                     } else {
                         Intent intent = new Intent(WelcomeActivity.this, DownLoadService.class);

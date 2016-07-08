@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.ncbi.a3dmgame.adapter.GuideViewPagerAdapter;
+import com.ncbi.a3dmgame.utils.MyLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,12 +58,12 @@ public class GuideActivity extends AppCompatActivity implements ViewPager.OnPage
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        Log.i("aaa", "onPageScrollStateChanged   positionOffsetPixels:" + positionOffsetPixels + "   positionOffset" + positionOffset);
+        MyLog.i("aaa", "onPageScrollStateChanged   positionOffsetPixels:" + positionOffsetPixels + "   positionOffset" + positionOffset);
     }
 
     @Override
     public void onPageSelected(int position) {
-        Log.i("aaa", "onPageSelected");
+        MyLog.i("aaa", "onPageSelected");
         guide_dot_iv[curentPosition].setImageResource(R.drawable.dot_white);
         guide_dot_iv[position].setImageResource(R.drawable.dot_dark);
         curentPosition = position;
@@ -86,7 +87,7 @@ public class GuideActivity extends AppCompatActivity implements ViewPager.OnPage
     @Override
     public void onPageScrollStateChanged(int state) {
         if (curentPosition == 2 && state == ViewPager.SCROLL_STATE_DRAGGING) {
-            Log.i("aaa", "onPageScrollStateChanged");
+            MyLog.i("aaa", "onPageScrollStateChanged");
             Intent intentMain = new Intent(this, MainActivity.class);
             SharedPreferences sharedPreferences = getSharedPreferences("isFirstOpen", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();

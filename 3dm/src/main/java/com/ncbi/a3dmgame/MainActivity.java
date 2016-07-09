@@ -17,6 +17,7 @@ import android.widget.ScrollView;
 import com.ncbi.a3dmgame.adapter.MainActivityImageViewPagerAdapter;
 import com.ncbi.a3dmgame.adapter.MainActivityViewPagerAdapter;
 import com.ncbi.a3dmgame.fragment.Fragment1;
+import com.ncbi.a3dmgame.fragment.Fragment2;
 import com.ncbi.a3dmgame.fragment.MainFragmentViewPager;
 
 import java.util.ArrayList;
@@ -35,6 +36,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private HorizontalScrollView horizontalScrollView_top;
     private RadioGroup radioGroup_top;
+
+    Fragment1 fragment0;
+    Fragment2 fragment1, fragment2, fragment3, fragment4, fragment5, fragment6, fragment7, fragment8, fragment9;
+    int currentIndex = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,31 +83,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //填充主界面的ViewPager
     private void initViewPager() {
         fragmentList = new ArrayList<>();
-//        fragment0 = new Fragment1(0);
-//        fragment1 = new Fragment1(1);
-//        fragment2 = new Fragment1(2);
-//        fragment3 = new Fragment1(3);
-//        fragment4 = new Fragment1(4);
-//        fragment5 = new Fragment1(5);
-//        fragment6 = new Fragment1(6);
-//        fragment7 = new Fragment1(7);
-//        fragment8 = new Fragment1(8);
-//        fragment9 = new Fragment1(9);
-//        fragmentList.add(fragment0);
-//        fragmentList.add(fragment1);
-//        fragmentList.add(fragment2);
-//        fragmentList.add(fragment3);
-//        fragmentList.add(fragment4);
-//        fragmentList.add(fragment5);
-//        fragmentList.add(fragment6);
-//        fragmentList.add(fragment7);
-//        fragmentList.add(fragment8);
-//        fragmentList.add(fragment9);
+        fragment0 = new Fragment1(0);
+        fragment1 = new Fragment2(1);
+        fragment2 = new Fragment2(2);
+        fragment3 = new Fragment2(3);
+        fragment4 = new Fragment2(4);
+        fragment5 = new Fragment2(5);
+        fragment6 = new Fragment2(6);
+        fragment7 = new Fragment2(7);
+        fragment8 = new Fragment2(8);
+        fragment9 = new Fragment2(9);
+        fragmentList.add(fragment0);
+        fragmentList.add(fragment1);
+        fragmentList.add(fragment2);
+        fragmentList.add(fragment3);
+        fragmentList.add(fragment4);
+        fragmentList.add(fragment5);
+        fragmentList.add(fragment6);
+        fragmentList.add(fragment7);
+        fragmentList.add(fragment8);
+        fragmentList.add(fragment9);
 
-        for (int i = 0; i < 10; i++) {
-            fragment[i] = new Fragment1(i);
-            fragmentList.add(fragment[i]);
-        }
 
         mainFragmentViewPager = (MainFragmentViewPager) findViewById(R.id.main_viewpager_content);
         mainFragmentViewPager.addOnPageChangeListener(this);
@@ -118,6 +119,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mainFragmentViewPager.setCurrentItem(i);
             }
         }
+//        if (rg_btn[1].getId() == view.getId()) {
+//            mainFragmentViewPager.setCurrentItem(1);
+//        }
+//        if (rg_btn[2].getId() == view.getId()) {
+//            mainFragmentViewPager.setCurrentItem(2);
+//        }
+//        if (rg_btn[3].getId() == view.getId()) {
+//            mainFragmentViewPager.setCurrentItem(3);
+//        }
+//        if (rg_btn[4].getId() == view.getId()) {
+//            mainFragmentViewPager.setCurrentItem(4);
+//        }
+//        if (rg_btn[5].getId() == view.getId()) {
+//            mainFragmentViewPager.setCurrentItem(5);
+//        }
+//        if (rg_btn[6].getId() == view.getId()) {
+//            mainFragmentViewPager.setCurrentItem(6);
+//        }
+//        if (rg_btn[7].getId() == view.getId()) {
+//            mainFragmentViewPager.setCurrentItem(7);
+//        }
+
+
     }
 
     @Override
@@ -127,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onPageSelected(int position) {
+        currentIndex = position;
         //顶部的滚动条出现移动效果
         horizontalScrollView_top.setVisibility(View.VISIBLE);
         radioGroup_top.setVisibility(View.VISIBLE);

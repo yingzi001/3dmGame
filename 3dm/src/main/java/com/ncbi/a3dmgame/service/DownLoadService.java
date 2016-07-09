@@ -20,7 +20,9 @@ import com.ncbi.a3dmgame.utils.FileUtils;
 import com.ncbi.a3dmgame.utils.HttpUtils;
 import com.ncbi.a3dmgame.utils.JsonUtils;
 import com.ncbi.a3dmgame.utils.MyDataBassHelper;
+import com.ncbi.a3dmgame.utils.MyLog;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 
 
@@ -66,25 +68,24 @@ public class DownLoadService extends Service {
                     }
                     //进行json解析；
                     JsonUtils.jsonToList(json, getApplicationContext());
-                    int i = 0;
                     //读取数据库的图片列
                     Cursor cursor = db.query("news", new String[]{"id", "litpic"}, null, null, null, null, null);
                     while (cursor.moveToNext()) {
-                        String id = cursor.getString(0);
+                        String id = cursor.getString(cursor.getColumnIndex("id"));
+                        String imgUrl = cursor.getString(cursor.getColumnIndex("litpic"));
                         String path = Environment.getExternalStorageDirectory().getAbsolutePath();
-                        String imgName = path + "/download/" + "img" + i + ".jpg";
-                        String imgUrl = "http://www.3dmgame.com" + cursor.getString(1);
+                        String imgName = imgUrl.split("\\/")[imgUrl.split("\\/").length - 1];
+                        MyLog.i("aaa", "分割的图片名字：" + imgName);
                         byte[] imgByte = HttpUtils.requestToByteArray(imgUrl);
-                        FileUtils.SaveFileToSD("download", "img" + i + ".jpg", imgByte);
+                        FileUtils.SaveFileToSD("a3dmdownload", imgName, imgByte);
                         ContentValues contentValues = new ContentValues();
-                        contentValues.put("litpic", "img" + i + ".jpg");
-                        Log.i("aaa", "imgname" + imgName);
-                        db.execSQL("update news set litpic=? where id=?", new String[]{imgName, id});
-                        i++;
+                        contentValues.put("litpic", path + File.separator + imgName);
+                        MyLog.i("aaa", "文件路径：" + path);
+                        db.execSQL("update news set litpicpath=? where id=?", new String[]{path + File.separator + "a3dmdownload" + File.separator + imgName, id});
                     }
 
                 } else {
-                    Log.i("aaa", "json解析失败");
+                    MyLog.i("aaa", "json解析失败");
                 }
                 handler.sendEmptyMessage(1);
             }

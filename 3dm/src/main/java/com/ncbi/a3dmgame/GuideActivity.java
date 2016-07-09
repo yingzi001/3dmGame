@@ -87,7 +87,7 @@ public class GuideActivity extends AppCompatActivity implements ViewPager.OnPage
     @Override
     public void onPageScrollStateChanged(int state) {
         if (curentPosition == 2 && state == ViewPager.SCROLL_STATE_DRAGGING) {
-            MyLog.i("aaa", "onPageScrollStateChanged");
+//            MyLog.i("aaa", "onPageScrollStateChanged");
             Intent intentMain = new Intent(this, MainActivity.class);
             SharedPreferences sharedPreferences = getSharedPreferences("isFirstOpen", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();

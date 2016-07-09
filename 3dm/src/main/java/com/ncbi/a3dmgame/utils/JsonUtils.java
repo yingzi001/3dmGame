@@ -63,7 +63,7 @@ public class JsonUtils {
                     String color = info.getString("color");
                     String writer = info.getString("writer");
                     String source = info.getString("source");
-                    String litpic = info.getString("litpic");
+                    String litpic = "http://www.3dmgame.com" + info.getString("litpic");
                     result.add(litpic);
                     String pubdate = info.getString("pubdate");
                     String senddate = info.getString("senddate");

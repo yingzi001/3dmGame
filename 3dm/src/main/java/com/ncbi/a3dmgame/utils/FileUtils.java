@@ -3,7 +3,6 @@ package com.ncbi.a3dmgame.utils;
 import android.os.Environment;
 import android.os.StatFs;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
 /**
@@ -26,6 +25,7 @@ public class FileUtils {
                 //判断空间是否够用
                 if (area > data.length) {
                     File dirFile = new File(SDPath + File.separator + dir);
+                    MyLog.i("aaa", "dirFile" + dirFile.getAbsolutePath());
                     //如果不存在，就创建目录；
                     if (!dirFile.exists()) {
                         dirFile.mkdirs();

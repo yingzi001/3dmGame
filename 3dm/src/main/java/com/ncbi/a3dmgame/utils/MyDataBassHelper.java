@@ -22,7 +22,7 @@ public class MyDataBassHelper extends SQLiteOpenHelper {
                 "typeid2 varchar(40),sortrank varchar(40),flag varchar(40),ismake varchar(40)," +
                 "channel varchar(40),arcrank varchar(40),click varchar(40),money varchar(40)," +
                 "title varchar(40),shorttitle varchar(40),color varchar(40),writer varchar(40)," +
-                "source varchar(40),litpic varchar(40),pubdate varchar(40),senddate varchar(40)," +
+                "source varchar(40),litpic varchar(40),litpicpath varchar(40),pubdate varchar(40),senddate varchar(40)," +
                 "mid varchar(40),keywords varchar(40),lastpost varchar(40),scores varchar(40)," +
                 "goodpost varchar(40),badpost varchar(40),voteid varchar(40),notpost varchar(40)," +
                 "description varchar(40),filename varchar(40),dutyadmin varchar(40),tackid varchar(40)," +

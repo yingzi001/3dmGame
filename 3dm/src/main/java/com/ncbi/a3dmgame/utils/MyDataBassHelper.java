@@ -18,7 +18,7 @@ public class MyDataBassHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("create table if not exists news (id varchar(40),typeid varchar(40)," +
+        sqLiteDatabase.execSQL("create table if not exists news (id varchar(40) primary key,typeid varchar(40)," +
                 "typeid2 varchar(40),sortrank varchar(40),flag varchar(40),ismake varchar(40)," +
                 "channel varchar(40),arcrank varchar(40),click varchar(40),money varchar(40)," +
                 "title varchar(40),shorttitle varchar(40),color varchar(40),writer varchar(40)," +

@@ -22,8 +22,8 @@ public class HttpUtils {
             URL url = new URL(urlPaath);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
-            connection.setReadTimeout(100000);
-            connection.setConnectTimeout(100000);
+            connection.setReadTimeout(1000000);
+            connection.setConnectTimeout(1000000);
             connection.setDoInput(true);
             connection.connect();
             int code = connection.getResponseCode();

@@ -1,6 +1,8 @@
 package com.ncbi.a3dmgame.utils;
 
 import android.content.Context;
+import android.content.Intent;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -99,19 +101,23 @@ public class JsonUtils {
                     String typeurl = info.getString("typeurl");
 
                     //获取数据库，并将数据写入到数据库当中；
-                    SQLiteDatabase database = helper.getReadableDatabase();
-                    database.execSQL("insert into news (id ,typeid,typeid2,sortrank,flag,ismake," +
-                                    "channel,arcrank,click,money,title,shorttitle,color,writer,source," +
-                                    "litpic,pubdate,senddate,mid,keywords,lastpost,scores,goodpost," +
-                                    "badpost,voteid,notpost,description,filename,dutyadmin,tackid," +
-                                    "mtype,weight,fby_id,game_id,feedback,typedir,typename,corank," +
-                                    "isdefault,defaultname,namerule,namerule2,ispart,moresite,siteurl," +
-                                    "sitepath,arcurl,typeurl) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-                            , new Object[]{id, typeid, typeid2, sortrank, flag, ismake, channel, arcrank, click,
-                                    money, title, shorttitle, color, writer, source, litpic, pubdate, senddate,
-                                    mid, keywords, lastpost, scores, goodpost, badpost, voteid, notpost, description,
-                                    filename, dutyadmin, tackid, mtype, weight, fby_id, game_id, feedback, typedir, typename,
-                                    corank, isdefault, defaultname, namerule, namerule2, ispart, moresite, siteurl, sitepath, arcurl, typeurl});
+                    try {
+                        SQLiteDatabase database = helper.getReadableDatabase();
+                        database.execSQL("insert into news (id ,typeid,typeid2,sortrank,flag,ismake," +
+                                        "channel,arcrank,click,money,title,shorttitle,color,writer,source," +
+                                        "litpic,pubdate,senddate,mid,keywords,lastpost,scores,goodpost," +
+                                        "badpost,voteid,notpost,description,filename,dutyadmin,tackid," +
+                                        "mtype,weight,fby_id,game_id,feedback,typedir,typename,corank," +
+                                        "isdefault,defaultname,namerule,namerule2,ispart,moresite,siteurl," +
+                                        "sitepath,arcurl,typeurl) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+                                , new Object[]{id, typeid, typeid2, sortrank, flag, ismake, channel, arcrank, click,
+                                        money, title, shorttitle, color, writer, source, litpic, pubdate, senddate,
+                                        mid, keywords, lastpost, scores, goodpost, badpost, voteid, notpost, description,
+                                        filename, dutyadmin, tackid, mtype, weight, fby_id, game_id, feedback, typedir, typename,
+                                        corank, isdefault, defaultname, namerule, namerule2, ispart, moresite, siteurl, sitepath, arcurl, typeurl});
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
 
 
 //                    ContentValues contentValues = new ContentValues();
@@ -172,7 +178,7 @@ public class JsonUtils {
 //                            "mtype,weight,fby_id,game_id,feedback,typedir,typename,corank," +
 //                            "isdefault,defaultname,namerule,namerule2,ispart,moresite,siteurl," +
 //                            "sitepath,arcurl,typeurl", contentValues);
-                    Log.i("aaa", "解析成功" + title);
+                    MyLog.i("aaa", "解析成功" + title);
                     DownLoadService.jsonLoadFinash = true;
 
                 }

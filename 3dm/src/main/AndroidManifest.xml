@@ -27,7 +27,8 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
+        <activity android:name=".utils.ContentActivity"></activity>
     </application>
 
 </manifest>

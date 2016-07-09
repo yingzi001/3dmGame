@@ -1,8 +1,10 @@
 package com.ncbi.a3dmgame;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,9 +18,12 @@ import android.widget.ScrollView;
 
 import com.ncbi.a3dmgame.adapter.MainActivityImageViewPagerAdapter;
 import com.ncbi.a3dmgame.adapter.MainActivityViewPagerAdapter;
+import com.ncbi.a3dmgame.fragment.ForumFragment;
 import com.ncbi.a3dmgame.fragment.Fragment1;
 import com.ncbi.a3dmgame.fragment.Fragment2;
 import com.ncbi.a3dmgame.fragment.MainFragmentViewPager;
+import com.ncbi.a3dmgame.service.DownLoadService;
+import com.ncbi.a3dmgame.utils.MyLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,17 +33,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private MainFragmentViewPager mainFragmentViewPager;
     private MainActivityViewPagerAdapter mainActivityViewPagerAdapter;
-    private Fragment1 fragment[] = new Fragment1[10];
+    //    private Fragment1 fragment[] = new Fragment1[10];
     private List<Fragment> fragmentList;
     private Inflater inflater = new Inflater();
     private RadioButton rg_btn[] = new RadioButton[10];
     private RadioButton bottom_rg_btn[] = new RadioButton[3];
+    private int typeId = 0;
+
 
     private HorizontalScrollView horizontalScrollView_top;
     private RadioGroup radioGroup_top;
 
+    //声明FragmentManager
+    private FragmentManager fragmentManager;
+    //论坛碎片
+    private ForumFragment forumFragment;
+
     Fragment1 fragment0;
-    Fragment2 fragment1, fragment2, fragment3, fragment4, fragment5, fragment6, fragment7, fragment8, fragment9;
+    //    Fragment2 fragment1, fragment2, fragment3, fragment4, fragment5, fragment6, fragment7, fragment8, fragment9;
+    Fragment2 fragment[] = new Fragment2[9];
     int currentIndex = 0;
 
     @Override
@@ -49,6 +62,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         radioGroup_top = (RadioGroup) findViewById(R.id.main_top_newstype_rg);
         initViewPager();
         initListener();
+        fragmentManager = getSupportFragmentManager();
+        forumFragment = new ForumFragment();
+        if (savedInstanceState==null){
+            fragmentManager.beginTransaction().add(forumFragment,"forum");
+        }
     }
 
     private void initListener() {
@@ -71,38 +89,61 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bottom_rg_btn[1] = (RadioButton) findViewById(R.id.bottom_btn1);
         bottom_rg_btn[2] = (RadioButton) findViewById(R.id.bottom_btn2);
 
-
         //给顶部标题btn设置监听
         for (int i = 0; i < 10; i++) {
             rg_btn[i].setOnClickListener(this);
         }
 
         //底部的Button设置默认状态
+        for (int i = 0; i < 3; i++) {
+            bottom_rg_btn[i].setOnClickListener(this);
+        }
     }
 
     //填充主界面的ViewPager
     private void initViewPager() {
         fragmentList = new ArrayList<>();
-        fragment0 = new Fragment1(0);
-        fragment1 = new Fragment2(1);
-        fragment2 = new Fragment2(2);
-        fragment3 = new Fragment2(3);
-        fragment4 = new Fragment2(4);
-        fragment5 = new Fragment2(5);
-        fragment6 = new Fragment2(6);
-        fragment7 = new Fragment2(7);
-        fragment8 = new Fragment2(8);
-        fragment9 = new Fragment2(9);
+        fragment0 = new Fragment1(1);
+//        fragment1 = new Fragment2(2);
+//        fragment2 = new Fragment2(151);
+//        fragment3 = new Fragment2(152);
+//        fragment4 = new Fragment2(153);
+//        fragment5 = new Fragment2(154);
+//        fragment6 = new Fragment2(196);
+//        fragment7 = new Fragment2(197);
+//        fragment8 = new Fragment2(199);
+//        fragment9 = new Fragment2(25);
+//        fragmentList.add(fragment0);
+//        fragmentList.add(fragment1);
+//        fragmentList.add(fragment2);
+//        fragmentList.add(fragment3);
+//        fragmentList.add(fragment4);
+//        fragmentList.add(fragment5);
+//        fragmentList.add(fragment6);
+//        fragmentList.add(fragment7);
+//        fragmentList.add(fragment8);
+//        fragmentList.add(fragment9);
+
+
+        fragment[0] = new Fragment2(2);
+        fragment[1] = new Fragment2(151);
+        fragment[2] = new Fragment2(152);
+        fragment[3] = new Fragment2(153);
+        fragment[4] = new Fragment2(154);
+        fragment[5] = new Fragment2(196);
+        fragment[6] = new Fragment2(197);
+        fragment[7] = new Fragment2(199);
+        fragment[8] = new Fragment2(25);
         fragmentList.add(fragment0);
-        fragmentList.add(fragment1);
-        fragmentList.add(fragment2);
-        fragmentList.add(fragment3);
-        fragmentList.add(fragment4);
-        fragmentList.add(fragment5);
-        fragmentList.add(fragment6);
-        fragmentList.add(fragment7);
-        fragmentList.add(fragment8);
-        fragmentList.add(fragment9);
+        fragmentList.add(fragment[0]);
+        fragmentList.add(fragment[1]);
+        fragmentList.add(fragment[2]);
+        fragmentList.add(fragment[3]);
+        fragmentList.add(fragment[4]);
+        fragmentList.add(fragment[5]);
+        fragmentList.add(fragment[6]);
+        fragmentList.add(fragment[7]);
+        fragmentList.add(fragment[8]);
 
 
         mainFragmentViewPager = (MainFragmentViewPager) findViewById(R.id.main_viewpager_content);
@@ -114,35 +155,49 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        for (int i = 0; i < 10; i++) {
-            if (rg_btn[i].getId() == view.getId()) {
-                mainFragmentViewPager.setCurrentItem(i);
+        if (rg_btn[0].getId() == view.getId()) {
+            mainFragmentViewPager.setCurrentItem(0);
+            Intent intent = new Intent(this, DownLoadService.class);
+            typeId = fragment0.getTypeId();
+
+            String jsonUrl = "http://www.3dmgame.com/sitemap/api.php?row=10&typeid=1&paging=1&page=1";
+            intent.putExtra("jsonurl", jsonUrl);
+            startService(intent);
+//            fragment0.getSimpleCursorAdapter().notifyDataSetChanged();
+
+        }
+        for (int i = 0; i < 9; i++) {
+            if (rg_btn[i + 1].getId() == view.getId()) {
+                mainFragmentViewPager.setCurrentItem(i + 1);
+                Intent intent = new Intent(this, DownLoadService.class);
+                typeId = fragment[i].getTypeId();
+                String jsonUrl = "http://www.3dmgame.com/sitemap/api.php?row=10&typeid=" + typeId + "&paging=1&page=1";
+                intent.putExtra("jsonurl", jsonUrl);
+                startService(intent);
+//                fragment[i].getSimpleCursorAdapter().notifyDataSetChanged();
             }
         }
-//        if (rg_btn[1].getId() == view.getId()) {
-//            mainFragmentViewPager.setCurrentItem(1);
-//        }
-//        if (rg_btn[2].getId() == view.getId()) {
-//            mainFragmentViewPager.setCurrentItem(2);
-//        }
-//        if (rg_btn[3].getId() == view.getId()) {
-//            mainFragmentViewPager.setCurrentItem(3);
-//        }
-//        if (rg_btn[4].getId() == view.getId()) {
-//            mainFragmentViewPager.setCurrentItem(4);
-//        }
-//        if (rg_btn[5].getId() == view.getId()) {
-//            mainFragmentViewPager.setCurrentItem(5);
-//        }
-//        if (rg_btn[6].getId() == view.getId()) {
-//            mainFragmentViewPager.setCurrentItem(6);
-//        }
-//        if (rg_btn[7].getId() == view.getId()) {
-//            mainFragmentViewPager.setCurrentItem(7);
-//        }
+
+            //底部btn监听事件
+        switch (view.getId()){
+            case R.id.bottom_btn0:
+
+                break;
+            case R.id.bottom_btn1:
+                MyLog.i("ccc","bottom");
+//                fragmentManager = getSupportFragmentManager();
+                forumFragment = new ForumFragment();
+                fragmentManager.beginTransaction().add(forumFragment,"forum").commit();
+
+                break;
+            case R.id.bottom_btn2:
+
+                break;
+        }
 
 
     }
+
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -160,6 +215,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //让顶部的RadioButton随着ViewPager一起滚动
         int left = rg_btn[position].getLeft();
         horizontalScrollView_top.smoothScrollTo(left, 0);
+
+        //设置网络请求下一页数据
+        if (position == 0) {
+            Intent intent = new Intent(this, DownLoadService.class);
+            typeId = fragment0.getTypeId();
+
+            String jsonUrl = "http://www.3dmgame.com/sitemap/api.php?row=10&typeid=1&paging=1&page=1";
+            intent.putExtra("jsonurl", jsonUrl);
+            startService(intent);
+//            fragment0.getSimpleCursorAdapter().notifyDataSetChanged();
+
+        }
+        else {
+            Intent intent = new Intent(this, DownLoadService.class);
+            typeId = fragment[position - 1].getTypeId();
+            String jsonUrl = "http://www.3dmgame.com/sitemap/api.php?row=10&typeid=" + typeId + "&paging=1&page=1";
+            intent.putExtra("jsonurl", jsonUrl);
+            startService(intent);
+//                fragment[i].getSimpleCursorAdapter().notifyDataSetChanged();
+        }
+
     }
 
     @Override

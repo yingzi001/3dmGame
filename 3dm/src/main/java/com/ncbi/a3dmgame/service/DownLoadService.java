@@ -11,8 +11,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.support.v7.app.NotificationCompat;
-import android.util.Log;
+import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.ncbi.a3dmgame.R;
@@ -36,6 +35,10 @@ public class DownLoadService extends Service {
     public DownLoadService() {
     }
 
+    public DownLoadService(String jsonUrl) {
+        this.jsonUrl = jsonUrl;
+    }
+
     MyDataBassHelper helper;
 
     @Override
@@ -57,17 +60,19 @@ public class DownLoadService extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String url = intent.getStringExtra("jsonurl");
-                byte[] jsonByte = HttpUtils.requestToByteArray(url);
+                if (intent.getStringExtra("jsonurl") != null) {
+                    jsonUrl = intent.getStringExtra("jsonurl");
+                }
+                byte[] jsonByte = HttpUtils.requestToByteArray(jsonUrl);
                 if (jsonByte != null) {
                     String json = null;
                     try {
                         json = new String(jsonByte, "utf-8");
+                        //进行json解析；
+                        JsonUtils.jsonToList(json, getApplicationContext());
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
-                    //进行json解析；
-                    JsonUtils.jsonToList(json, getApplicationContext());
                     //读取数据库的图片列
                     Cursor cursor = db.query("news", new String[]{"id", "litpic"}, null, null, null, null, null);
                     while (cursor.moveToNext()) {

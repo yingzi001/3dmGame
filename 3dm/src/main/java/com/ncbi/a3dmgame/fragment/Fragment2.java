@@ -96,7 +96,6 @@ public class Fragment2 extends Fragment implements PullToRefreshBase.OnRefreshLi
         });
     }
 
-
     @Override
     public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
 //        jsonUrl = "http://www.3dmgame.com/sitemap/api.php?row=10&typeid=" + typeId +

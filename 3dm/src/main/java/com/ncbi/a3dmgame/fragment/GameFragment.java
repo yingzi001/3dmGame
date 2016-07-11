@@ -6,23 +6,19 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshGridView;
-import com.ncbi.a3dmgame.ContentActivity;
 import com.ncbi.a3dmgame.GameActivity;
 import com.ncbi.a3dmgame.R;
 import com.ncbi.a3dmgame.service.DownLoadService;
-import com.ncbi.a3dmgame.utils.JsonUtils;
 import com.ncbi.a3dmgame.utils.MyDataBassHelper;
 import com.ncbi.a3dmgame.utils.MyLog;
 
@@ -82,10 +78,10 @@ public class GameFragment extends Fragment implements AdapterView.OnItemSelected
 //                        MyLog.i("Frament2","onItemClickListener after"+contentCursor);
 //                    String contentUrl = contentCursor.getString(0);
                 MyLog.i("GameFragment", "onItemClickListener after" + title);
-                Intent intent = new Intent(getContext(), GameActivity.class);
-                intent.putExtra("title", title);
+                Intent intentGame = new Intent(getContext(), GameActivity.class);
+                intentGame.putExtra("title", title);
                 MyLog.i("GameFragment", "onItemClickListener2  " + title);
-                startActivity(intent);
+                startActivity(intentGame);
             }
         });
     }

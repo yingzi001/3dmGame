@@ -1,5 +1,6 @@
 package com.ncbi.a3dmgame.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -36,7 +37,7 @@ import java.util.List;
 /**
  * Created by acer on 2016/7/6.
  */
-
+@SuppressLint("ValidFragment")
 public class Fragment1 extends Fragment implements PullToRefreshBase.OnRefreshListener2<ListView>, ViewPager.OnPageChangeListener {
     private View view;
     private ViewPager imageViewPager;
@@ -55,6 +56,7 @@ public class Fragment1 extends Fragment implements PullToRefreshBase.OnRefreshLi
 
 
     public Fragment1() {
+
     }
 
     public Fragment1(int typeId) {
@@ -116,7 +118,7 @@ public class Fragment1 extends Fragment implements PullToRefreshBase.OnRefreshLi
                         }
                         currentInsex++;
                         MyLog.i("imageViewPager", "滑动后" + currentInsex);
-                        if (currentInsex == 3f ) {
+                        if (currentInsex == 3f) {
                             currentInsex = 0;
                         }
 
@@ -146,13 +148,15 @@ public class Fragment1 extends Fragment implements PullToRefreshBase.OnRefreshLi
                 startActivity(intent);
                 MyLog.i("Frament2", "onItemClickListener2  " + id);
 
+
             }
         });
     }
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-
+        simpleCursorAdapter.notifyDataSetChanged();
+        pullToRefreshListView.onRefreshComplete();
     }
 
     @Override

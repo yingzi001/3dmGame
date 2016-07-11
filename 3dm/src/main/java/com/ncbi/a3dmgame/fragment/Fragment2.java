@@ -1,5 +1,6 @@
 package com.ncbi.a3dmgame.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -25,7 +26,7 @@ import com.ncbi.a3dmgame.utils.MyLog;
 /**
  * Created by acer on 2016/7/6.
  */
-
+@SuppressLint("ValidFragment")
 public class Fragment2 extends Fragment implements PullToRefreshBase.OnRefreshListener2<ListView> {
     private View view;
 
@@ -44,9 +45,6 @@ public class Fragment2 extends Fragment implements PullToRefreshBase.OnRefreshLi
 
     public void setTypeId(int typeId) {
         this.typeId = typeId;
-    }
-
-    public Fragment2() {
     }
 
     public Fragment2(int typeId) {
@@ -103,6 +101,7 @@ public class Fragment2 extends Fragment implements PullToRefreshBase.OnRefreshLi
                 "&paging=1&page=1";
         Intent intent = new Intent(getContext(), DownLoadService.class);
         getActivity().startService(intent);
+        simpleCursorAdapter.notifyDataSetChanged();
         pullToRefreshListView.onRefreshComplete();
     }
 

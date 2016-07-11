@@ -52,12 +52,11 @@ public class WelcomeActivity extends AppCompatActivity {
 
         animation.setAnimationListener(new Animation.AnimationListener() {
 
-
             @Override
             public void onAnimationStart(Animation animation) {
                 Intent intent = new Intent(WelcomeActivity.this, DownLoadService.class);
                 intent.putExtra("jsonurl", jsonUrl);
-                intent.putExtra("tablename","news");
+                intent.putExtra("tablename", "news");
                 if (netUtils.netOk()) {
                     if (netUtils.getNetType() == ConnectivityManager.TYPE_MOBILE) {
                         startService(intent);
@@ -75,7 +74,6 @@ public class WelcomeActivity extends AppCompatActivity {
                 }
                 isFirstOpen();
             }
-
             @Override
             public void onAnimationRepeat(Animation animation) {
 
@@ -90,6 +88,11 @@ public class WelcomeActivity extends AppCompatActivity {
         if (!mark) {
             Intent guideIntent = new Intent(WelcomeActivity.this, GuideActivity.class);
             startActivity(guideIntent);
+            Intent intent = new Intent(getApplicationContext(), DownLoadService.class);
+            intent.putExtra("jsonurl", "http://www.3dmgame.com/sitemap/api.php?row=10&typeid=" + 179 +
+                    "&paging=1&page=1");
+            intent.putExtra("tablename", "games");
+            startService(intent);
             finish();
         } else {
             Intent mainintent = new Intent(WelcomeActivity.this, MainActivity.class);

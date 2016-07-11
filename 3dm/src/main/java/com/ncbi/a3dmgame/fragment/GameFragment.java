@@ -12,9 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 import com.ncbi.a3dmgame.GameActivity;
 import com.ncbi.a3dmgame.R;
@@ -28,7 +30,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GameFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+public class GameFragment extends Fragment implements AdapterView.OnItemSelectedListener, PullToRefreshBase.OnRefreshListener2<GridView> {
     private Spinner gameTypre_spinner;
     private PullToRefreshGridView pullToRefreshGridView;
     private List<String> gameTypre_list;
@@ -39,6 +41,7 @@ public class GameFragment extends Fragment implements AdapterView.OnItemSelected
     private int[] typeIds = {179, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192};
     private String gameUrl = "http://www.3dmgame.com/sitemap/api.php?row=10&typeid=182&paging=1&page=1";
 
+    private SimpleCursorAdapter gameAdapter;
 
     public GameFragment() {
         // Required empty public constructor
@@ -47,7 +50,20 @@ public class GameFragment extends Fragment implements AdapterView.OnItemSelected
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         initView(inflater, container);
+        Intent intent = new Intent(getContext(), DownLoadService.class);
+        intent.putExtra("jsonurl", "http://www.3dmgame.com/sitemap/api.php?row=10&typeid=" + typeIds[0] +
+                "&paging=1&page=1");
+        intent.putExtra("tablename", "games");
+        getActivity().startService(intent);
+        MyDataBassHelper helper = new MyDataBassHelper(getContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select id as _id,litpicpath,title from games ", null);
+        SimpleCursorAdapter gameAdapter = new SimpleCursorAdapter(getContext(), R.layout.game_item, cursor, new String[]{"litpicpath", "title"},
+                new int[]{R.id.cover_game_iv, R.id.title_game_tv});
+        pullToRefreshGridView.setAdapter(gameAdapter);
+        gameAdapter.notifyDataSetChanged();
         return view;
     }
 
@@ -110,7 +126,7 @@ public class GameFragment extends Fragment implements AdapterView.OnItemSelected
             MyDataBassHelper helper = new MyDataBassHelper(getContext());
             SQLiteDatabase db = helper.getReadableDatabase();
             Cursor cursor = db.rawQuery("select id as _id,litpicpath,title from games where typeid=?", new String[]{typeIds[i] + ""});
-            SimpleCursorAdapter gameAdapter = new SimpleCursorAdapter(getContext(), R.layout.game_item, cursor, new String[]{"litpicpath", "title"},
+            gameAdapter = new SimpleCursorAdapter(getContext(), R.layout.game_item, cursor, new String[]{"litpicpath", "title"},
                     new int[]{R.id.cover_game_iv, R.id.title_game_tv});
             pullToRefreshGridView.setAdapter(gameAdapter);
         }
@@ -122,4 +138,14 @@ public class GameFragment extends Fragment implements AdapterView.OnItemSelected
 
     }
 
+    @Override
+    public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
+        gameAdapter.notifyDataSetChanged();
+        pullToRefreshGridView.onRefreshComplete();
+    }
+
+    @Override
+    public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
+
+    }
 }

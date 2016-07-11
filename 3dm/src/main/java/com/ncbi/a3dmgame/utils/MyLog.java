@@ -8,7 +8,7 @@ import android.util.Log;
 
 public class MyLog {
 
-    public static final boolean ableLog = true;//开关控制
+    public static final boolean ableLog = false;//开关控制
 
     public static void i(String tag, String msg) {
         if (ableLog) {

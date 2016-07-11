@@ -4,8 +4,14 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.print.PrintHelper;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +49,10 @@ public class Fragment1 extends Fragment implements PullToRefreshBase.OnRefreshLi
     private String jsonUrl = "http://www.3dmgame.com/sitemap/api.php?row=10&typeid=" + typeId +
             "&paging=1&page=1";
 
+    private Messenger messenger;
+
+    private int currentInsex = 0;
+
 
     public Fragment1() {
     }
@@ -66,7 +76,7 @@ public class Fragment1 extends Fragment implements PullToRefreshBase.OnRefreshLi
         pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.pullto_lv_content);
         helper = new MyDataBassHelper(getContext());
         SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select id as _id,litpicpath,title,senddate from news", null);
+        final Cursor cursor = db.rawQuery("select id as _id,litpicpath,title,senddate from news", null);
         simpleCursorAdapter = new MyCursorAdapter(getContext(), cursor, R.layout.newslist_item);
         pullToRefreshListView.setAdapter(simpleCursorAdapter);
         imageViewList = new ArrayList<>();
@@ -80,6 +90,44 @@ public class Fragment1 extends Fragment implements PullToRefreshBase.OnRefreshLi
         imageViewPager.setAdapter(mainActivityImageViewPagerAdapter);
         pullToRefreshListView.setOnRefreshListener(this);
         imageViewPager.addOnPageChangeListener(this);
+
+        messenger = new Messenger(new Myhandler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                imageViewPager.setCurrentItem(msg.arg1);
+            }
+        });
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while (true) {
+
+                        Thread.sleep(3000);
+                        MyLog.i("imageViewPager", "滑动前" + currentInsex);
+                        Message msg = Message.obtain();
+                        msg.arg1 = currentInsex;
+                        try {
+                            messenger.send(msg);
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                        currentInsex++;
+                        MyLog.i("imageViewPager", "滑动后" + currentInsex);
+                        if (currentInsex == 3f ) {
+                            currentInsex = 0;
+                        }
+
+
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
         pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -101,7 +149,6 @@ public class Fragment1 extends Fragment implements PullToRefreshBase.OnRefreshLi
             }
         });
     }
-
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
@@ -128,22 +175,20 @@ public class Fragment1 extends Fragment implements PullToRefreshBase.OnRefreshLi
     }
 
     @Override
-    public void onPageSelected(final int position) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(3000);
-                    imageViewPager.setCurrentItem(position);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+    public void onPageSelected(int position) {
+
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
 
     }
+
+    class Myhandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+        }
+    }
+
 }

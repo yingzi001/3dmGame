@@ -18,6 +18,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ncbi.a3dmgame.R;
 import com.ncbi.a3dmgame.adapter.MyCursorAdapter;
 import com.ncbi.a3dmgame.ContentActivity;
+import com.ncbi.a3dmgame.service.DownLoadService;
 import com.ncbi.a3dmgame.utils.MyDataBassHelper;
 import com.ncbi.a3dmgame.utils.MyLog;
 
@@ -98,11 +99,10 @@ public class Fragment2 extends Fragment implements PullToRefreshBase.OnRefreshLi
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-//        jsonUrl = "http://www.3dmgame.com/sitemap/api.php?row=10&typeid=" + typeId +
-//                "&paging=1&page=1";
-//        Service service = new DownLoadService(jsonUrl);
-//        Intent intent = new Intent(getContext(), service.getClass());
-//        service.startService(intent);
+        jsonUrl = "http://www.3dmgame.com/sitemap/api.php?row=10&typeid=" + typeId +
+                "&paging=1&page=1";
+        Intent intent = new Intent(getContext(), DownLoadService.class);
+        getActivity().startService(intent);
         pullToRefreshListView.onRefreshComplete();
     }
 

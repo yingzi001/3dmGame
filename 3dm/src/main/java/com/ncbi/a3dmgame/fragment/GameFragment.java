@@ -88,19 +88,32 @@ public class GameFragment extends Fragment implements AdapterView.OnItemSelected
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        MyLog.i("GameFragment", "item 被选中" + i);
-
-        Intent intent = new Intent(getContext(), DownLoadService.class);
-        intent.putExtra("jsonurl", "http://www.3dmgame.com/sitemap/api.php?row=10&typeid=" + typeIds[i] +
-                "&paging=1&page=1");
-        intent.putExtra("tablename", "games");
-        getActivity().startService(intent);
-        MyDataBassHelper helper = new MyDataBassHelper(getContext());
-        SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select id as _id,litpicpath,title from games where typeid=?", new String[]{typeIds[i] + ""});
-        SimpleCursorAdapter gameAdapter = new SimpleCursorAdapter(getContext(), R.layout.game_item, cursor, new String[]{"litpicpath", "title"},
-                new int[]{R.id.cover_game_iv, R.id.title_game_tv});
-        pullToRefreshGridView.setAdapter(gameAdapter);
+        if (i == 0) {
+            Intent intent = new Intent(getContext(), DownLoadService.class);
+            intent.putExtra("jsonurl", "http://www.3dmgame.com/sitemap/api.php?row=10&typeid=" + typeIds[i] +
+                    "&paging=1&page=1");
+            intent.putExtra("tablename", "games");
+            getActivity().startService(intent);
+            MyDataBassHelper helper = new MyDataBassHelper(getContext());
+            SQLiteDatabase db = helper.getReadableDatabase();
+            Cursor cursor = db.rawQuery("select id as _id,litpicpath,title from games ", null);
+            SimpleCursorAdapter gameAdapter = new SimpleCursorAdapter(getContext(), R.layout.game_item, cursor, new String[]{"litpicpath", "title"},
+                    new int[]{R.id.cover_game_iv, R.id.title_game_tv});
+            pullToRefreshGridView.setAdapter(gameAdapter);
+        } else {
+            MyLog.i("GameFragment", "item 被选中" + i);
+            Intent intent = new Intent(getContext(), DownLoadService.class);
+            intent.putExtra("jsonurl", "http://www.3dmgame.com/sitemap/api.php?row=10&typeid=" + typeIds[i] +
+                    "&paging=1&page=1");
+            intent.putExtra("tablename", "games");
+            getActivity().startService(intent);
+            MyDataBassHelper helper = new MyDataBassHelper(getContext());
+            SQLiteDatabase db = helper.getReadableDatabase();
+            Cursor cursor = db.rawQuery("select id as _id,litpicpath,title from games where typeid=?", new String[]{typeIds[i] + ""});
+            SimpleCursorAdapter gameAdapter = new SimpleCursorAdapter(getContext(), R.layout.game_item, cursor, new String[]{"litpicpath", "title"},
+                    new int[]{R.id.cover_game_iv, R.id.title_game_tv});
+            pullToRefreshGridView.setAdapter(gameAdapter);
+        }
 
     }
 

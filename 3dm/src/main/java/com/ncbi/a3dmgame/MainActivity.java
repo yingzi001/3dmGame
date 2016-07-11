@@ -181,10 +181,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
     }
+
     @Override
     public void onPageSelected(int position) {
         //判断是否为顶部的Button
         if (position <= 9) {
+            bottom_rg_btn[0].setChecked(true);
             //顶部的滚动条出现移动效果
             horizontalScrollView_top.setVisibility(View.VISIBLE);
             radioGroup_top.setVisibility(View.VISIBLE);
@@ -215,21 +217,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (position > 10) {
             //底部第二个Button
             if (position - 10 == 1) {
-                radioGroup_top.setVisibility(View.GONE);
-                horizontalScrollView_top.setVisibility(View.GONE);
                 //设置当前pager对应的RaadioButton并设置checked状态为true
                 bottom_rg_btn[1].setChecked(true);
+                radioGroup_top.setVisibility(View.GONE);
+                horizontalScrollView_top.setVisibility(View.GONE);
             }
             //底部第三个Button
             if (position - 10 == 2) {
-                horizontalScrollView_top.setVisibility(View.GONE);
-                radioGroup_top.setVisibility(View.GONE);
-
                 //设置当前pager对应的RaadioButton并设置checked状态为true
                 bottom_rg_btn[2].setChecked(true);
+                horizontalScrollView_top.setVisibility(View.GONE);
+                radioGroup_top.setVisibility(View.GONE);
             }
         }
     }
+
     @Override
     public void onPageScrollStateChanged(int state) {
 

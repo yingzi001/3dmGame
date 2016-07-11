@@ -57,6 +57,7 @@ public class WelcomeActivity extends AppCompatActivity {
             public void onAnimationStart(Animation animation) {
                 Intent intent = new Intent(WelcomeActivity.this, DownLoadService.class);
                 intent.putExtra("jsonurl", jsonUrl);
+                intent.putExtra("tablename","news");
                 if (netUtils.netOk()) {
                     if (netUtils.getNetType() == ConnectivityManager.TYPE_MOBILE) {
                         startService(intent);

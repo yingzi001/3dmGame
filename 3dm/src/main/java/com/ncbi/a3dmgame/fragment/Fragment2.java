@@ -1,35 +1,25 @@
 package com.ncbi.a3dmgame.fragment;
 
-import android.app.Service;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ncbi.a3dmgame.R;
-import com.ncbi.a3dmgame.adapter.MainActivityImageViewPagerAdapter;
 import com.ncbi.a3dmgame.adapter.MyCursorAdapter;
-import com.ncbi.a3dmgame.service.DownLoadService;
-import com.ncbi.a3dmgame.utils.ContentActivity;
+import com.ncbi.a3dmgame.ContentActivity;
 import com.ncbi.a3dmgame.utils.MyDataBassHelper;
 import com.ncbi.a3dmgame.utils.MyLog;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by acer on 2016/7/6.
@@ -89,18 +79,18 @@ public class Fragment2 extends Fragment implements PullToRefreshBase.OnRefreshLi
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
 
-                    TextView id_tv = (TextView) view.findViewById(R.id.id_tv);
-                    String id = id_tv.getText().toString();
+                TextView id_tv = (TextView) view.findViewById(R.id.id_tv);
+                String id = id_tv.getText().toString();
 //                    MyDataBassHelper helper = new MyDataBassHelper(getContext());
 //                    SQLiteDatabase db = helper.getReadableDatabase();MyLog.i("Frament2","onItemClickListener befor"+id);
 //                   Cursor contentCursor = db.rawQuery("select arcurl from news where id=?",new String[] {id+""});
 //                        MyLog.i("Frament2","onItemClickListener after"+contentCursor);
 //                    String contentUrl = contentCursor.getString(0);
 //                MyLog.i("Frament2","onItemClickListener after"+id);
-                    Intent intent = new Intent(getContext(), ContentActivity.class);
-                    intent.putExtra("typeid",id);
-                    startActivity(intent);
-                    MyLog.i("Frament2","onItemClickListener2  "+id);
+                Intent intent = new Intent(getContext(), ContentActivity.class);
+                intent.putExtra("typeid", id);
+                startActivity(intent);
+                MyLog.i("Frament2", "onItemClickListener2  " + id);
 
             }
         });
@@ -109,11 +99,12 @@ public class Fragment2 extends Fragment implements PullToRefreshBase.OnRefreshLi
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-        jsonUrl = "http://www.3dmgame.com/sitemap/api.php?row=10&typeid=" + typeId +
-                "&paging=1&page=1";
-        Service service = new DownLoadService(jsonUrl);
-        Intent intent = new Intent(getContext(), service.getClass());
-        service.startService(intent);
+//        jsonUrl = "http://www.3dmgame.com/sitemap/api.php?row=10&typeid=" + typeId +
+//                "&paging=1&page=1";
+//        Service service = new DownLoadService(jsonUrl);
+//        Intent intent = new Intent(getContext(), service.getClass());
+//        service.startService(intent);
+        pullToRefreshListView.onRefreshComplete();
     }
 
     @Override

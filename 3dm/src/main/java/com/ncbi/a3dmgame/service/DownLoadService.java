@@ -18,6 +18,7 @@ import com.ncbi.a3dmgame.R;
 import com.ncbi.a3dmgame.utils.FileUtils;
 import com.ncbi.a3dmgame.utils.HttpUtils;
 import com.ncbi.a3dmgame.utils.JsonUtils;
+import com.ncbi.a3dmgame.utils.JsonUtilsGame;
 import com.ncbi.a3dmgame.utils.MyDataBassHelper;
 import com.ncbi.a3dmgame.utils.MyLog;
 
@@ -31,11 +32,14 @@ public class DownLoadService extends Service {
     private NotificationManager manager;
     private NotificationCompat.Builder builder;
     private MyHandler handler;
+    private String tableName;
+    private SQLiteDatabase db;
 
     public DownLoadService() {
     }
 
-    public DownLoadService(String jsonUrl) {
+    public DownLoadService(String jsonUrl, String tableName) {
+        this.tableName = tableName;
         this.jsonUrl = jsonUrl;
     }
 
@@ -44,7 +48,6 @@ public class DownLoadService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        helper = new MyDataBassHelper(getApplicationContext());
         handler = new MyHandler();
         manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         builder = new NotificationCompat.Builder(getApplicationContext());
@@ -56,11 +59,11 @@ public class DownLoadService extends Service {
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
 
-        final SQLiteDatabase db = helper.getReadableDatabase();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 if (intent.getStringExtra("jsonurl") != null) {
+                    tableName = intent.getStringExtra("tablename");
                     jsonUrl = intent.getStringExtra("jsonurl");
                 }
                 byte[] jsonByte = HttpUtils.requestToByteArray(jsonUrl);
@@ -68,13 +71,24 @@ public class DownLoadService extends Service {
                     String json = null;
                     try {
                         json = new String(jsonByte, "utf-8");
+                        helper = new MyDataBassHelper(getApplicationContext());
+                        db = helper.getReadableDatabase();
                         //进行json解析；
-                        JsonUtils.jsonToList(json, getApplicationContext());
-                    } catch (UnsupportedEncodingException e) {
+                        if (tableName.equals("news")) {
+                            JsonUtils.jsonToList(json, getApplicationContext());
+
+                        } else {
+                            JsonUtilsGame.jsonToList(json, getApplicationContext());
+                        }
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    Cursor cursor = null;
+
                     //读取数据库的图片列
-                    Cursor cursor = db.query("news", new String[]{"id", "litpic"}, null, null, null, null, null);
+                    MyLog.i("DownLoadService", tableName);
+                    cursor = db.query(tableName, new String[]{"id", "litpic"}, null, null, null, null, null);
+
                     while (cursor.moveToNext()) {
                         String id = cursor.getString(cursor.getColumnIndex("id"));
                         String imgUrl = cursor.getString(cursor.getColumnIndex("litpic"));
@@ -86,7 +100,7 @@ public class DownLoadService extends Service {
                         ContentValues contentValues = new ContentValues();
                         contentValues.put("litpic", path + File.separator + imgName);
                         MyLog.i("aaa", "文件路径：" + path);
-                        db.execSQL("update news set litpicpath=? where id=?", new String[]{path + File.separator + "a3dmdownload" + File.separator + imgName, id});
+                        db.execSQL("update " + tableName + " set litpicpath=? where id=?", new String[]{path + File.separator + "a3dmdownload" + File.separator + imgName, id});
                     }
 
                 } else {

@@ -28,7 +28,8 @@
             android:exported="true" />
 
         <activity android:name=".MainActivity" />
-        <activity android:name=".utils.ContentActivity"></activity>
+        <activity android:name=".ContentActivity" />
+        <activity android:name=".Main2Activity"></activity>
     </application>
 
 </manifest>

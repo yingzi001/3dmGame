@@ -31,24 +31,6 @@ public class JsonUtils {
                 for (int i = 0; i < 10; i++) {
                     JSONObject info = data.getJSONObject(i + "");
 
-
-//                    //使用迭代器进行json解析；
-//                    Iterator<String> keys = info.keys();
-//                    StringBuilder sb1 = new StringBuilder();
-//                    for (int j = 0;keys.hasNext();j ++){
-//                        sb1.append(keys.next()+",");
-//                    }
-//                    String[] item = sb1.toString().split(",");
-//
-//
-//                    StringBuilder sb2 = new StringBuilder();
-//                    for (int n = 0; n <= item.length; n++) {
-//                       sb2.append(info.getString(item[n]+","));
-//                    }
-//                    String[] result = sb2.toString().split(",");
-//                    Log.i("aaa", "解析成功    " + result[10]);
-
-
                     //使用常规方式进行json解析；
                     String id = info.getString("id");
                     String typeid = info.getString("typeid");
@@ -119,7 +101,6 @@ public class JsonUtils {
                         e.printStackTrace();
                     }
 
-
 //                    ContentValues contentValues = new ContentValues();
 //                    contentValues.put("id", id);
 //                    contentValues.put("typeid", typeid);
@@ -170,7 +151,6 @@ public class JsonUtils {
 //                    contentValues.put("arcurl", arcurl);
 //                    contentValues.put("typeurl", typeurl);
 //
-//
 //                    database.insert("news", "id,typeid,typeid2,sortrank,flag,ismake," +
 //                            "channel,arcrank,click,money,title,shorttitle,color,writer,source," +
 //                            "litpic,pubdate,senddate,mid,keywords,lastpost,scores,goodpost," +
@@ -180,14 +160,12 @@ public class JsonUtils {
 //                            "sitepath,arcurl,typeurl", contentValues);
                     MyLog.i("aaa", "解析成功" + title);
                     DownLoadService.jsonLoadFinash = true;
-
                 }
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-
         return null;
     }
 }

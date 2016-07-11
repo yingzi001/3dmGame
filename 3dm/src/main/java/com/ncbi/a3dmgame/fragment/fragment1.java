@@ -1,15 +1,12 @@
 package com.ncbi.a3dmgame.fragment;
 
-import android.app.Service;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +20,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ncbi.a3dmgame.R;
 import com.ncbi.a3dmgame.adapter.MainActivityImageViewPagerAdapter;
 import com.ncbi.a3dmgame.adapter.MyCursorAdapter;
-import com.ncbi.a3dmgame.service.DownLoadService;
-import com.ncbi.a3dmgame.utils.ContentActivity;
+import com.ncbi.a3dmgame.ContentActivity;
 import com.ncbi.a3dmgame.utils.MyDataBassHelper;
 import com.ncbi.a3dmgame.utils.MyLog;
 
@@ -35,7 +31,7 @@ import java.util.List;
  * Created by acer on 2016/7/6.
  */
 
-public class Fragment1 extends Fragment implements PullToRefreshBase.OnRefreshListener2<ListView> {
+public class Fragment1 extends Fragment implements PullToRefreshBase.OnRefreshListener2<ListView>, ViewPager.OnPageChangeListener {
     private View view;
     private ViewPager imageViewPager;
     private MainActivityImageViewPagerAdapter mainActivityImageViewPagerAdapter;
@@ -83,7 +79,7 @@ public class Fragment1 extends Fragment implements PullToRefreshBase.OnRefreshLi
         mainActivityImageViewPagerAdapter = new MainActivityImageViewPagerAdapter(imageViewList);
         imageViewPager.setAdapter(mainActivityImageViewPagerAdapter);
         pullToRefreshListView.setOnRefreshListener(this);
-
+        imageViewPager.addOnPageChangeListener(this);
         pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -98,9 +94,9 @@ public class Fragment1 extends Fragment implements PullToRefreshBase.OnRefreshLi
 //                    String contentUrl = contentCursor.getString(0);
 //                MyLog.i("Frament2","onItemClickListener after"+id);
                 Intent intent = new Intent(getContext(), ContentActivity.class);
-                intent.putExtra("typeid",id);
+                intent.putExtra("typeid", id);
                 startActivity(intent);
-                MyLog.i("Frament2","onItemClickListener2  "+id);
+                MyLog.i("Frament2", "onItemClickListener2  " + id);
 
             }
         });
@@ -117,7 +113,6 @@ public class Fragment1 extends Fragment implements PullToRefreshBase.OnRefreshLi
 
     }
 
-
     public int getTypeId() {
         return typeId;
     }
@@ -126,4 +121,29 @@ public class Fragment1 extends Fragment implements PullToRefreshBase.OnRefreshLi
         this.typeId = typeId;
     }
 
+    //imageViewPagerde的滑动监听
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(final int position) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(3000);
+                    imageViewPager.setCurrentItem(position);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
 }
